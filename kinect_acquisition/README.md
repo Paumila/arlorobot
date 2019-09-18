@@ -1,4 +1,4 @@
-### kinect_acquisition
+# Kinect_acquisition
 
 To run the kinect_acquisition launch follow the following instructions
 
