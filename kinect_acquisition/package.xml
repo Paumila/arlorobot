@@ -1,0 +1,20 @@
+<package>
+
+  <name>kinect_acquisition</name>
+  <version>0.4.2</version>
+  <description>The kinect_acquisition package</description>
+
+  <maintainer email="pau.mila@uvic.cat">pau</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/freenect_launch</url>
+  <url type="repository">https://github.com/ros-drivers/freenect_stack.git</url>
+  <url type="bugtracker">https://github.com/ros-drivers/freenect_stack/issues</url>
+
+  <author>Patrick Mihelich (original openni_launch package)</author>
+  <author email="piyushk@gmail.com">Piyush Khandelwal (libfreenect port)</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>
