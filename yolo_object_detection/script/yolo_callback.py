@@ -113,9 +113,14 @@ def write(x, img):
     c2 = c1[0] + t_size[0] + 3, c1[1] + t_size[1] + 4
     cv2.rectangle(img, c1, c2,color, -1)
     cv2.putText(img, label, (c1[0], c1[1] + t_size[1] + 4), cv2.FONT_HERSHEY_PLAIN, 1, [225,255,255], 1);
-    return img
 
-# 
+    top = np.array(c1)
+    bottom = np.array(c2)
+    object_coordinates = np.append(label,top)
+    object_coordinates = np.append(object_coordinates,bottom)	
+
+    return img, object_coordinates, label
+
 
 def image_color_callback(msg):
 
@@ -128,7 +133,7 @@ def image_color_callback(msg):
     img, orig_im, dim = prep_image(frame, inp_dim)
             
     im_dim = torch.FloatTensor(dim).repeat(1,2) 
-             
+            
     if CUDA:
         im_dim = im_dim.cuda()
         img = img.cuda()
@@ -140,11 +145,15 @@ def image_color_callback(msg):
             
     output[:,[1,3]] *= frame.shape[1]
     output[:,[2,4]] *= frame.shape[0]
-            
+           
     for x in output:
-	write(x,orig_im)
+       img, object_coordinates, label = write(x, orig_im)
 
-    cv2.imshow("frame", orig_im)
+# Print a variable with (label, top_left_coordinates, bottom_right_coordinates)
+
+       print(object_coordinates)
+
+    cv2.imshow("frame", img)
 
     cv2.waitKey(1)
 
