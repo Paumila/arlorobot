@@ -13,7 +13,7 @@ bridge = CvBridge()
 
 def image_color_callback(msg):
 
-    print("Received an image")
+#    print("Received an image")
 
     cv2_img = bridge.imgmsg_to_cv2(msg, desired_encoding="passthrough") # Convert ROS image to OpenCV image
 
