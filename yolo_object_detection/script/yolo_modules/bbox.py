@@ -30,6 +30,7 @@ def confidence_filter_cls(result, confidence):
 
 
 def get_abs_coord(box):
+
     box[2], box[3] = abs(box[2]), abs(box[3])
     x1 = (box[0] - box[2]/2) - 1 
     y1 = (box[1] - box[3]/2) - 1 
@@ -54,6 +55,7 @@ def bbox_iou(box1, box2):
     
     
     """
+
     #Get the coordinates of bounding boxes
     b1_x1, b1_y1, b1_x2, b1_y2 = box1[:,0], box1[:,1], box1[:,2], box1[:,3]
     b2_x1, b2_y1, b2_x2, b2_y2 = box2[:,0], box2[:,1], box2[:,2], box2[:,3]
