@@ -152,12 +152,20 @@ def image_color_callback(msg):
     output[:,[2,4]] *= frame.shape[0]
            
     for x in output:
+
        orig_im, object_coordinates = write(x, orig_im)
 
-# Print a variable with (label, top_left_coordinates, bottom_right_coordinates)
+       # arlorobot_msgs_path
+       arlorobot_msgs_path = os.path.join(basepath, "arlorobot/arlorobot_msgs/msg/" ,"detection.msg")
 
-       print(object_coordinates)
+       detection = open(arlorobot_msgs_path,'w')
+       
+       for element in object_coordinates:
 
+           print >> detection, element
+
+       detection.close()
+       
     cv2.imshow("frame", orig_im)
 
     cv2.waitKey(1)
