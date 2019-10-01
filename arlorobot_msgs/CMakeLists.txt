@@ -9,6 +9,7 @@ project(arlorobot_msgs)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   message_generation
+  message_runtime
   roscpp
   rospy
   std_msgs
@@ -50,9 +51,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
    FILES
-#   Message1.msg
+   detection.msg
 #   Message2.msg
- )
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
