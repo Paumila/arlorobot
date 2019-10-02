@@ -109,6 +109,13 @@ def prep_image(img, inp_dim):
 def write(x, img):
     c1 = tuple(x[1:3].int())
     c2 = tuple(x[3:5].int())
+
+    bb_x1 = c1[0].item()
+    bb_y1 = c1[1].item()
+
+    bb_x2 = c2[0].item()
+    bb_y2 = c2[1].item()
+
     cls = int(x[-1])
     label = "{0}".format(classes[cls])
     color = random.choice(colors)
@@ -118,16 +125,9 @@ def write(x, img):
     cv2.rectangle(img, c1, c2,color, -1)
     cv2.putText(img, label, (c1[0], c1[1] + t_size[1] + 4), cv2.FONT_HERSHEY_PLAIN, 1, [225,255,255], 1);
 
-    bb_x1 = c1[0].item()
-    bb_y1 = c1[1].item()
-
-    bb_x2 = c2[0].item()
-    bb_y2 = c2[1].item()
-
     box = [bb_x1, bb_y1, bb_x2, bb_y2]
 
     return img, label, box
-
 
 def image_color_callback(msg):
 
