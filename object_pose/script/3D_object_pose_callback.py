@@ -32,10 +32,10 @@ def detection_callback(msg):
     u = (((bb_x2 - bb_x1)/2) + bb_x1)
     v = (((bb_y2 - bb_y1)/2) + bb_y1)
 
-def image_color_callback(msg):
+def image_depth_callback(msg):
 
     # Convert ROS image to OpenCV image
-    image_color = bridge.imgmsg_to_cv2(msg, desired_encoding="passthrough")
+    image_depth = bridge.imgmsg_to_cv2(msg, desired_encoding="passthrough")
 
     rospy.Subscriber("detection", detection, detection_callback)
 
@@ -43,17 +43,11 @@ def image_color_callback(msg):
 
     if label == "clock":
 
-        image_color = cv2.circle(image_color, center_coordinates, 10, (0,255,0), -1)
+       depth_person = image_depth[u,v]
 
-    elif label == "chair":
+       if depth_person != 0:
 
-        image_color = cv2.circle(image_color, center_coordinates, 10, (0,0,255), -1)
-
-    elif label == "person":
-
-        image_color = cv2.circle(image_color, center_coordinates, 10, (255,0,0), -1)
-
-    cv2.imshow("RGB", image_color)
+           print (depth_person)
 
     cv2.waitKey(10)
 
@@ -62,10 +56,10 @@ def main():
     rospy.init_node('object_pose_callback')
 
     # Define your image topic
-    image_color = "/camera/rgb/image_color"
+    image_depth = "/camera/depth/image_raw"
 
     # Set up your subscriber and define its callback
-    rospy.Subscriber(image_color, Image, image_color_callback)
+    rospy.Subscriber(image_depth, Image, image_depth_callback)
 
     # Spin until ctrl + c
     rospy.spin()
