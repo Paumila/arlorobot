@@ -50,19 +50,19 @@ def arg_parse():
 # Global variables
 
 # Absolute path
-basepath = os.getenv("ARLO_PATH")
+AbsolutePath = os.getenv("ARLO_PATH")
 
 # cfgfile_path
-cfgfile_path = os.path.join(basepath, "arlorobot/yolo_object_detection/script/cfg/" ,"yolov3.cfg")
+CfgFilePath = os.path.join(AbsolutePath, "arlorobot/yolo_object_detection/script/cfg/" ,"yolov3.cfg")
 
 # weightsfile_path
-weightsfile_path = os.path.join(basepath, "arlorobot/yolo_object_detection/script/weights/","yolov3.weights")
+WeightsFilePath = os.path.join(AbsolutePath, "arlorobot/yolo_object_detection/script/weights/","yolov3.weights")
 
 # classes_path
-classesfile_path = os.path.join(basepath, "arlorobot/yolo_object_detection/script/classes/","coco.names")
+ClassesFilePath = os.path.join(AbsolutePath, "arlorobot/yolo_object_detection/script/classes/","coco.names")
 
 # colors_path
-colorsfile_path = os.path.join(basepath, "arlorobot/yolo_object_detection/script/colors/","pallete_py2.pkl")
+ColorsFilePath = os.path.join(AbsolutePath, "arlorobot/yolo_object_detection/script/colors/","pallete_py2.pkl")
 
 
 args = arg_parse()
@@ -73,8 +73,8 @@ CUDA = torch.cuda.is_available()
 num_classes = 80
 bbox_attrs = 5 + num_classes
 
-model = yolo_modules.Darknet(cfgfile_path)
-model.load_weights(weightsfile_path)
+model = yolo_modules.Darknet(CfgFilePath)
+model.load_weights(WeightsFilePath)
 
 model.net_info["height"] = args.reso
 inp_dim = int(model.net_info["height"])
@@ -87,8 +87,8 @@ if CUDA:
 
 model.eval()
 
-classes = yolo_modules.load_classes(classesfile_path)
-colors = pkl.load(open(colorsfile_path, "rb"))
+classes = yolo_modules.load_classes(ClassesFilePath)
+colors = pkl.load(open(ColorsFilePath, "rb"))
 
 # Prepare image for inputting to the neural network
 
@@ -186,7 +186,6 @@ def main():
         '''Initializes YoloNode'''
         ic = YoloNode()
         rospy.init_node('YoloNode')
-
 
     	# Spin until ctrl + c
     	rospy.spin()
