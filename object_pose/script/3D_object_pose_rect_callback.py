@@ -4,8 +4,9 @@
 import rospy
 # ROS Image message
 from sensor_msgs.msg import Image
-# Detection message
-from arlorobot_msgs.msg import detection
+# message
+from arlorobot_msgs.msg import DetectionArray
+#from arlorobot_msgs.msg import Landmark
 # ROS Image message -> OpenCV2 image converter
 from cv_bridge import CvBridge
 # OpenCV2 for saving an image
@@ -15,36 +16,53 @@ import time
 
 import numpy as np
 
+from queue import Queue
+
 bridge = CvBridge()
 
-i = 0
-j = 0
-label = ""
+class ObjectPose:
 
-def detection_callback(msg):
+    def __init__(self):
+        '''Initialize ros publisher and ros subscriber'''
+        # topic where we publish
+        #self.LandMarkPub = rospy.Publisher("Landmark", Landmark, queue_size = 1)
+        # Define your image topic
+        ImageRectDepth = "/camera/depth/image_rect_raw"
+        # Set up your subscribers and define its callbacks
+        self.ImageRectDepthSub = rospy.Subscriber(ImageRectDepth, Image, self.ImageRectDepth_Callback)
+        #self.DetectionArraySub = rospy.Subscriber("DetectionArray", DetectionArray, self.DetectionArray_Callback)
 
-    global label
-    global i
-    global j
+    def ImageRectDepth_Callback(self, ImageRectDepth):
 
-    label = msg.label
+        ImageRectDepthArray = list()
 
-    bb_x1 = msg.bb_x1
-    bb_y1 = msg.bb_y1
-    bb_x2 = msg.bb_x2
-    bb_y2 = msg.bb_y2
+        ImageRectDepthArray.append(ImageRectDepth)
 
-    i = (((bb_x2 - bb_x1)/2) + bb_x1)
-    j = (((bb_y2 - bb_y1)/2) + bb_y1)
+        #if len(ImageRectDepthArray) == 10:
+        #    ImageRectDepthArray.pop(0)
 
-def image_depth_callback(msg):
+        print(len(ImageRectDepthArray))
 
-    # Convert ROS image to OpenCV image
-    image_rect_depth = bridge.imgmsg_to_cv2(msg, desired_encoding="passthrough")
+    '''def DetectionArray_Callback(self, DetectionArray):
 
-    rospy.Subscriber("detection", detection, detection_callback)
+        ImageRectDepthStamp = ImageRectDepthArray.header.stamp.index(DetectionArray.header.stamp)
 
-    # Center_object_pixel with pixel_ij
+        # Convert ROS image to OpenCV image
+        ImageRectDepthCv = bridge.imgmsg_to_cv2(ImageRectDepthStamp, desired_encoding="passthrough")
+
+        label = DetectionArray.label
+        bb_x1 = DetectionArray.bb_x1
+        bb_y1 = DetectionArray.bb_y1
+        bb_x2 = DetectionArray.bb_x2
+        bb_y2 = DetectionArray.bb_y2
+
+        i = (((bb_x2 - bb_x1)/2) + bb_x1)
+        j = (((bb_y2 - bb_y1)/2) + bb_y1)
+
+        print(i,j)'''
+
+
+'''    # Center_object_pixel with pixel_ij
 
     center_object_pixel = (i,j)
 
@@ -74,17 +92,13 @@ def image_depth_callback(msg):
 
     print(label, center_object_pixel, z_pixel_ij, direction_pixel_ij)
 
-    time.sleep(0.1)
+    time.sleep(0.1)'''
 
 def main():
 
-    rospy.init_node('object_pose_rect_callback')
-
-    # Define your image topic
-    image_rect_depth = "/camera/depth/image_rect_raw"
-
-    # Set up your subscriber and define its callback
-    rospy.Subscriber(image_rect_depth, Image, image_depth_callback)
+    '''Initializes ObjectPose'''
+    ic = ObjectPose()
+    rospy.init_node('ObjectPose')
 
     # Spin until ctrl + c
     rospy.spin()
