@@ -28,38 +28,43 @@ class ObjectPose:
         #self.LandMarkPub = rospy.Publisher("Landmark", Landmark, queue_size = 1)
         # Define your image topic
         ImageRectDepth = "/camera/depth/image_rect_raw"
+        # Initialize ImageRectDepth list
+        global ImageRectDepthArray
+        ImageRectDepthArray = list()
         # Set up your subscribers and define its callbacks
         self.ImageRectDepthSub = rospy.Subscriber(ImageRectDepth, Image, self.ImageRectDepth_Callback)
-        #self.DetectionArraySub = rospy.Subscriber("DetectionArray", DetectionArray, self.DetectionArray_Callback)
+        self.DetectionArraySub = rospy.Subscriber("DetectionArray", DetectionArray, self.DetectionArray_Callback)
 
     def ImageRectDepth_Callback(self, ImageRectDepth):
 
-        ImageRectDepthArray = list()
-
         ImageRectDepthArray.append(ImageRectDepth)
 
-        #if len(ImageRectDepthArray) == 10:
-        #    ImageRectDepthArray.pop(0)
+        if len(ImageRectDepthArray) == 100:
+            ImageRectDepthArray.pop(0)
 
-        print(len(ImageRectDepthArray))
+        # print(ImageRectDepthArray[-1].header.stamp)
 
-    '''def DetectionArray_Callback(self, DetectionArray):
+    def DetectionArray_Callback(self, DetectionArray):
 
-        ImageRectDepthStamp = ImageRectDepthArray.header.stamp.index(DetectionArray.header.stamp)
+        for i in range(len(ImageRectDepthArray)-1):
 
-        # Convert ROS image to OpenCV image
-        ImageRectDepthCv = bridge.imgmsg_to_cv2(ImageRectDepthStamp, desired_encoding="passthrough")
+            if ImageRectDepthArray[i].header.seq == DetectionArray.header.seq:
 
-        label = DetectionArray.label
-        bb_x1 = DetectionArray.bb_x1
-        bb_y1 = DetectionArray.bb_y1
-        bb_x2 = DetectionArray.bb_x2
-        bb_y2 = DetectionArray.bb_y2
+                ImageRectDepthStamp = ImageRectDepthArray[i]
 
-        i = (((bb_x2 - bb_x1)/2) + bb_x1)
-        j = (((bb_y2 - bb_y1)/2) + bb_y1)
+                # Convert ROS image to OpenCV image
+                ImageRectDepthCv = bridge.imgmsg_to_cv2(ImageRectDepthStamp, desired_encoding="passthrough")
 
-        print(i,j)'''
+                label = DetectionArray.label
+                bb_x1 = DetectionArray.bb_x1
+                bb_y1 = DetectionArray.bb_y1
+                bb_x2 = DetectionArray.bb_x2
+                bb_y2 = DetectionArray.bb_y2
+
+                i = (((bb_x2 - bb_x1)/2) + bb_x1)
+                j = (((bb_y2 - bb_y1)/2) + bb_y1)
+
+                print(i,j)
 
 
 '''    # Center_object_pixel with pixel_ij
