@@ -62,7 +62,7 @@ def image_depth_callback(msg):
 
     # Camera matrixK
 
-    matrixK = [[542.4242037247233, 0, 316.25477565299], [0, 542.760418951165, 260.0237918784719], [0, 0, 1]]
+    matrixK = [[538.400002091351, 0, 325.2479705810862], [0, 540.8584752417346, 252.4522833308824], [0, 0, 1]] # Matriu rectificada 3x3 La ultima columna fora
 
     # Calculate matrix K inverse
 

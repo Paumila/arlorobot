@@ -23,12 +23,13 @@ import argparse
 import pickle as pkl
 
 # message
-
-from arlorobot_msgs.msg import detection
+from arlorobot_msgs.msg import Detection
+from arlorobot_msgs.msg import DetectionArray
 
 # Importing all yolo modules
 import yolo_modules
 
+# OpenCv CvBridge
 bridge = CvBridge()
 
 # Parse arguements to the detect module
@@ -129,54 +130,63 @@ def write(x, img):
 
     return img, label, box
 
-def image_rect_color_callback(msg):
+class YoloNode:
 
-    # Convert ROS image to OpenCV image
+    def __init__(self):
+        '''Initialize ros publisher and ros subscriber'''
+        # topic where we publish
+        self.ObjectArrayPub = rospy.Publisher("DetectionArray", DetectionArray, queue_size = 1)
+        # Define your image topic
+        ImageRectColor = "/camera/rgb/image_rect_color"
+    	# Set up your subscriber and define its callback
+    	self.ImageRectColorSub = rospy.Subscriber(ImageRectColor, Image, self.ImageRectColor_Callback)
 
-    frame = bridge.imgmsg_to_cv2(msg, desired_encoding="passthrough")
+    def ImageRectColor_Callback(self, ImageRectColor):
 
-    img, orig_im, dim = prep_image(frame, inp_dim)
+        # Convert ROS image to OpenCV image
+        ImageRectColorFrame = bridge.imgmsg_to_cv2(ImageRectColor, desired_encoding="passthrough")
+        img, orig_im, dim = prep_image(ImageRectColorFrame, inp_dim)
+        im_dim = torch.FloatTensor(dim).repeat(1,2)
 
-    im_dim = torch.FloatTensor(dim).repeat(1,2)
+        if CUDA:
+            im_dim = im_dim.cuda()
+            img = img.cuda()
 
-    if CUDA:
-        im_dim = im_dim.cuda()
-        img = img.cuda()
+        output = model(Variable(img), CUDA)
+        output = yolo_modules.write_results(output, confidence, num_classes, nms = True, nms_conf = nms_thesh)
 
-    output = model(Variable(img), CUDA)
-    output = yolo_modules.write_results(output, confidence, num_classes, nms = True, nms_conf = nms_thesh)
+        output[:,1:5] = torch.clamp(output[:,1:5], 0.0, float(inp_dim))/inp_dim
 
-    output[:,1:5] = torch.clamp(output[:,1:5], 0.0, float(inp_dim))/inp_dim
+        output[:,[1,3]] *= ImageRectColorFrame.shape[1]
+        output[:,[2,4]] *= ImageRectColorFrame.shape[0]
 
-    output[:,[1,3]] *= frame.shape[1]
-    output[:,[2,4]] *= frame.shape[0]
+        ObjectArray = DetectionArray()
 
-    for x in output:
+        # copiar headers
+        ObjectArray.header = ImageRectColor.header
 
-       orig_im, label, box = write(x, orig_im)
+        for x in output:
 
-       pub = rospy.Publisher("detection", detection, queue_size=1)
+           orig_im, label, box = write(x, orig_im)
 
-       message = detection()
+           Object = Detection()
 
-       message.label = label
-       message.bb_x1 = box[0]
-       message.bb_y1 = box[1]
-       message.bb_x2 = box[2]
-       message.bb_y2 = box[3]
-       pub.publish(message)
+           Object.label = label
+           Object.bb_x1 = box[0]
+           Object.bb_y1 = box[1]
+           Object.bb_x2 = box[2]
+           Object.bb_y2 = box[3]
 
-       time.sleep(0.1)
+           ObjectArray.DetectionArray.append(Object)
+
+        self.ObjectArrayPub.publish(ObjectArray)
 
 def main():
 
-     	rospy.init_node('yolo_object_detection_rect_callback')
+        '''Initializes YoloNode'''
+        ic = YoloNode()
+        rospy.init_node('YoloNode')
 
-    	# Define your image topic
-    	image_rect_color = "/camera/rgb/image_rect_color"
-
-    	# Set up your subscriber and define its callback
-    	rospy.Subscriber(image_rect_color, Image, image_rect_color_callback)
 
     	# Spin until ctrl + c
     	rospy.spin()
