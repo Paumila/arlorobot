@@ -53,7 +53,8 @@ add_message_files(
    FILES
    Detection.msg
    DetectionArray.msg
-#   Message2.msg
+   LandMark.msg
+   LandMarkArray.msg
 )
 
 ## Generate services in the 'srv' folder

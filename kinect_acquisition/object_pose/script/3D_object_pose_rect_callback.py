@@ -54,8 +54,6 @@ class ObjectPose:
                 # Convert ROS image to OpenCV image
                 ImageRectDepthCv = bridge.imgmsg_to_cv2(ImageRectDepthStamp, desired_encoding="passthrough")
 
-                # print(ImageRectDepthCv.shape)
-
                 Det = DetectionArray.DetectionArray
 
                 ObjectArray = LandMarkArray()
@@ -74,8 +72,10 @@ class ObjectPose:
                     i = (((bb_x2 - bb_x1)/2) + bb_x1)
                     j = (((bb_y2 - bb_y1)/2) + bb_y1)
 
+                    print([i,j])
+
                     # Calculate z(depth) with pixel_ij
-                    Z_ij = ImageRectDepthCv[j,i] # Veure perque diu que esta fora de rang (index)
+                    Z_ij = ImageRectDepthCv[i,j] # Veure perque diu que esta fora de rang (index)
 
                     # Creating a vector V transpose with dimensions of the pixel_ij
                     Vector_ij = [i,j,1]

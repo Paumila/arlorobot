@@ -107,6 +107,7 @@ def prep_image(img, inp_dim):
 # Write object detected in a rectangle to the image
 
 def write(x, img):
+
     c1 = tuple(x[1:3].int())
     c2 = tuple(x[3:5].int())
 

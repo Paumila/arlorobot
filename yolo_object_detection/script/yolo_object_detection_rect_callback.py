@@ -145,6 +145,7 @@ class YoloNode:
 
         # Convert ROS image to OpenCV image
         ImageRectColorFrame = bridge.imgmsg_to_cv2(ImageRectColor, desired_encoding="passthrough")
+
         img, orig_im, dim = prep_image(ImageRectColorFrame, inp_dim)
         im_dim = torch.FloatTensor(dim).repeat(1,2)
 
