@@ -1,0 +1,52 @@
+
+<!-- kinect_acquisition launch -->
+
+<launch>
+
+<include file="$(find kinect_acquisition)/launch/kinect_acquisition.launch"/>
+
+<!-- Yolo object detection node -->
+
+<node
+  name="Yolo"
+  pkg="yolo_object_detection"
+  type="yolo_object_detection_rect_callback.py"
+  respawn="true"
+  output="screen">
+</node>
+
+<!-- Object pose node -->
+
+<node
+  name="ObjectPose"
+  pkg="object_pose"
+  type="3D_object_pose_rect_callback.py"
+  respawn="true"
+  output="screen">
+</node>
+
+<!-- Markers node -->
+
+<node
+  name="Markers"
+  pkg=""
+  type=".py"
+  respawn="true"
+  output="screen">
+</node>
+
+<!-- Cartographer -->
+
+<include file="$(find arlorobot_cartographer)/launch/arlorobot_cartographer.launch"/>
+
+<!-- Rviz -->
+
+<node
+  pkg="rviz"
+  type="rviz"
+  name="rviz"
+  args="-d $(find arlorobot_launch)/rviz/arlorobot_global.rviz)"
+  output="screen">
+</node>
+
+</launch>
