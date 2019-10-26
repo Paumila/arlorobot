@@ -184,12 +184,12 @@ class YoloNode:
 
 def main():
 
-        '''Initializes YoloNode'''
-        ic = YoloNode()
-        rospy.init_node('YoloNode')
+    '''Initializes YoloNode'''
+    rospy.init_node('YoloNode')
+    ic = YoloNode()
 
-    	# Spin until ctrl + c
-    	rospy.spin()
+    # Spin until ctrl + c
+    rospy.spin()
 
 if __name__ == '__main__':
     main()
