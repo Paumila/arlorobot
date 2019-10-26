@@ -2,8 +2,8 @@
 
 ## Marker explanation
 
-| CUBE | SPHERE | CYLINDER |
-| -- | -- | -- |
+|--| CUBE | SPHERE | CYLINDER |
+| -- | -- | -- | -- |
 | COLOR | OBJECT | OBJECT | OBJECT |
 | -- | -- | -- | -- |
 | RED | CHAIR | TVMONITOR | REFRIGERATOR |
