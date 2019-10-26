@@ -134,7 +134,7 @@ class ObjectPose:
         '''Initialize ros publisher and ros subscriber'''
         # topic where we publish
         self.LandMarkArrayPub = rospy.Publisher("LandMarkArray", LandMarkArray, queue_size = 1)
-        self.MarkerArrayPub = rospy.Publisher("MarkerArray", MarkerArray, queue_size = 10)
+        self.MarkerArrayPub = rospy.Publisher("MarkerArray", MarkerArray, queue_size = 1)
         # Define your image topic
         ImageRectDepth = "/camera/depth/image_rect_raw"
         # Initialize ImageRectDepth list
