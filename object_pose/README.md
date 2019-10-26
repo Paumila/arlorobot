@@ -2,9 +2,7 @@
 
 ## Marker explanation
 
-|--| CUBE | SPHERE | CYLINDER |
-| -- | -- | -- | -- |
-| COLOR | OBJECT | OBJECT | OBJECT |
+|| CUBE | SPHERE | CYLINDER |
 | -- | -- | -- | -- |
 | RED | CHAIR | TVMONITOR | REFRIGERATOR |
 | GREEN | DININGTABLE | POTTEDPLANT | OVEN |
