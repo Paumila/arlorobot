@@ -21,14 +21,14 @@ import numpy as np
 
 bridge = CvBridge()
 
-def Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray):
+def Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray, counter):
 
     if figure == "CUBE":
 
         marker = Marker()
         marker.header = ObjectArray.header
         marker.type = marker.CUBE
-        marker.id = ObjectArray.header.seq
+        marker.id = counter
         marker.scale.x = 100
         marker.scale.y = 100
         marker.scale.z = 100
@@ -54,7 +54,7 @@ def Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray):
         marker.pose.position.x = X_ij
         marker.pose.position.y = Y_ij
         marker.pose.position.z = Z_ij
-        marker.lifetime = rospy.Duration(3)
+        marker.lifetime = rospy.Duration(0)
 
         return(marker)
 
@@ -63,7 +63,7 @@ def Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray):
         marker = Marker()
         marker.header = ObjectArray.header
         marker.type = marker.SPHERE
-        marker.id = ObjectArray.header.seq
+        marker.id = counter
         marker.scale.x = 100
         marker.scale.y = 100
         marker.scale.z = 100
@@ -89,7 +89,7 @@ def Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray):
         marker.pose.position.x = X_ij
         marker.pose.position.y = Y_ij
         marker.pose.position.z = Z_ij
-        marker.lifetime = rospy.Duration(3)
+        marker.lifetime = rospy.Duration(0)
 
         return(marker)
 
@@ -98,7 +98,7 @@ def Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray):
         marker = Marker()
         marker.header = ObjectArray.header
         marker.type = marker.CYLINDER
-        marker.id = ObjectArray.header.seq
+        marker.id = counter
         marker.scale.x = 100
         marker.scale.y = 100
         marker.scale.z = 100
@@ -124,7 +124,7 @@ def Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray):
         marker.pose.position.x = X_ij
         marker.pose.position.y = Y_ij
         marker.pose.position.z = Z_ij
-        marker.lifetime = rospy.Duration(3)
+        marker.lifetime = rospy.Duration(0)
 
         return(marker)
 
@@ -140,6 +140,7 @@ class ObjectPose:
         # Initialize ImageRectDepth list
         global ImageRectDepthArray
         ImageRectDepthArray = list()
+        self.counter = 0
         # Set up your subscribers and define its callbacks
         self.ImageRectDepthSub = rospy.Subscriber(ImageRectDepth, Image, self.ImageRectDepth_Callback)
         self.DetectionArraySub = rospy.Subscriber("DetectionArray", DetectionArray, self.DetectionArray_Callback)
@@ -222,7 +223,9 @@ class ObjectPose:
 
                         figure = "CUBE"
 
-                        marker = Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray)
+                        marker = Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray, self.counter)
+
+                        self.counter += 1
 
                         Markers.markers.append(marker)
 
@@ -230,7 +233,9 @@ class ObjectPose:
 
                         figure = "SPHERE"
 
-                        marker = Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray)
+                        marker = Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray, self.counter)
+
+                        self.counter += 1
 
                         Markers.markers.append(marker)
 
@@ -238,7 +243,9 @@ class ObjectPose:
 
                         figure = "CYLINDER"
 
-                        marker = Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray)
+                        marker = Marker_function(self, figure, label, X_ij, Y_ij, Z_ij, ObjectArray, self.counter)
+
+                        self.counter += 1
 
                         Markers.markers.append(marker)
 
