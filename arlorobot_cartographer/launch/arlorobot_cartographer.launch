@@ -10,7 +10,7 @@
    args="-configuration_directory $(find arlorobot_cartographer)/config
          -configuration_basename arlorobot_cartographer.lua"
    output="screen">"
-   <remap from="points2" to="/camera/depth/points" />
+   <remap from="scan" to="/camera/scan" />
 </node>
 <node
    name="cartographer_occupancy_grid_node"
